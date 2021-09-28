@@ -77,7 +77,7 @@ public class Billing {
         sp.setBounds(100, 100, 800, 130);
         sp.setBorder(blackline);
 
-        JLabel lblNewLabel_2 = new JLabel("Cost");
+        JLabel lblNewLabel_2 = new JLabel("Cart");
         lblNewLabel_2.setFont(new Font("Serif", Font.PLAIN, 18));
         lblNewLabel_2.setBounds(100, 250, 70, 15);
         frame.getContentPane().add(lblNewLabel_2);
@@ -124,7 +124,7 @@ public class Billing {
         textField_1.setBorder(blackline);
 
         frame.getContentPane().add(field);
-        frame.add(field);
+        frame.getContentPane().add(field);
         frame.getContentPane().add(sp);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
