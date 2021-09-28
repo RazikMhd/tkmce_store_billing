@@ -1,10 +1,17 @@
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
+
 import java.awt.*;
+import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -12,8 +19,10 @@ public class Billing {
 
     private final TableRowSorter<TableModel> sorter;
     private JTextField field;
+    public JTable table;
 
     public Billing(){
+
         Border blackline = BorderFactory.createLineBorder(Color.black);
         JFrame frame = new JFrame();
         JLabel lblNewLabel = new JLabel("Billing");
@@ -46,7 +55,8 @@ public class Billing {
             @Override
             public void changedUpdate(DocumentEvent e) {}
         });
-        DefaultTableModel model = new DefaultTableModel(new String[][]{{"Sarah","100"}, {"Abc","50"}, {"def","30"}}, new String[]{"Name","Price","Selection"}){
+
+        DefaultTableModel model = new DefaultTableModel(new String[][]{}, new String[]{"Name","Price","Selection"}){
             Class[] columnTypes = new Class[] {
                     Object.class, Object.class, Boolean.class
             };
@@ -55,7 +65,7 @@ public class Billing {
             }
         };
 
-        JTable table = new JTable(model);
+        table = new JTable(model);
         sorter = new TableRowSorter<TableModel>(model);  // <--
         table.setRowSorter(sorter);
         table.getColumnModel().getColumn(0).setPreferredWidth(550);
@@ -121,6 +131,24 @@ public class Billing {
         frame.getContentPane().setLayout(null);
         frame.setVisible(true);
         frame.setSize(1000,600);
+
+        loadItems();
+    }
+
+    public void loadItems()
+    {
+        MongoClient mongo = new MongoClient( "localhost" , 27017 );
+        MongoDatabase database = mongo.getDatabase("tkm_store");
+        MongoCollection<Document> collection = database.getCollection("inventory");
+        ArrayList<Document> documentList = collection.find().into(new ArrayList<>());
+
+        DefaultTableModel tableadd=(DefaultTableModel)table.getModel();
+        tableadd.setRowCount(0);
+        for (Document product : documentList) {
+            System.out.println(product.getString("name"));
+            Object data[]={product.getString("name"),product.getInteger("price").toString()};
+            tableadd.addRow(data);
+        }
     }
 
     protected void filter() {
