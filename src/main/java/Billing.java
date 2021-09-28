@@ -1,132 +1,137 @@
-import java.awt.EventQueue;
+import java.awt.*;
 
-        import javax.swing.JFrame;
-        import javax.swing.JLabel;
-        import java.awt.Font;
-        import javax.swing.SwingConstants;
-        import javax.swing.JTextField;
-        import javax.swing.JPanel;
-        import javax.swing.JScrollPane;
-        import javax.swing.JTable;
-        import javax.swing.table.DefaultTableModel;
-        import javax.swing.JButton;
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 public class Billing {
 
-    private JFrame frame;
-    private JTextField textField;
-    private JTable table;
-    private JTable table_1;
-    private JTextField textField_1;
+    private final TableRowSorter<TableModel> sorter;
+    private JTextField field;
 
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    Billing window = new Billing();
-                    window.frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    /**
-     * Create the application.
-     */
-    public Billing() {
-        initialize();
-    }
-
-    /**
-     * Initialize the contents of the frame.
-     */
-    private void initialize() {
-        frame = new JFrame();
-        frame.setBounds(100, 100, 440, 440);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().setLayout(null);
-
+    public Billing(){
+        Border blackline = BorderFactory.createLineBorder(Color.black);
+        JFrame frame = new JFrame();
         JLabel lblNewLabel = new JLabel("Billing");
         lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 18));
-        lblNewLabel.setBounds(186, 15, 70, 22);
+        lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 28));
+        lblNewLabel.setBounds(400, 15, 200, 35);
         frame.getContentPane().add(lblNewLabel);
 
         JLabel lblNewLabel_1 = new JLabel("Item Name");
-        lblNewLabel_1.setBounds(34, 50, 80, 15);
+        lblNewLabel_1.setFont(new Font("Serif", Font.PLAIN, 18));
+        lblNewLabel_1.setBounds(100, 55, 120, 25);
         frame.getContentPane().add(lblNewLabel_1);
 
-        textField = new JTextField();
-        textField.setBounds(140, 50, 140, 19);
-        frame.getContentPane().add(textField);
-        textField.setColumns(10);
+        field = new JTextField();
+        field.setBounds(225, 55, 200, 25);
+        frame.getContentPane().add(field);
+        field.setColumns(10);
 
-        JPanel panel = new JPanel();
-        panel.setBounds(34, 65, 369, 80);
-        frame.getContentPane().add(panel);
-        panel.setLayout(null);
+        field.getDocument().addDocumentListener(new DocumentListener() {  // <---
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                filter();
+            }
 
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                filter();
+            }
 
-        table = new JTable();
-        table.setModel(new DefaultTableModel(
-                new Object[][] {
-                        {"sdgds", "dgfdf"},
-                        {"dgfds", "dsgd"},
-                        {"dfg", null},
-                        {null, null},
-                },
-                new String[] {
-                        "Id", "Name"
-                }
-        ));
+            @Override
+            public void changedUpdate(DocumentEvent e) {}
+        });
+        DefaultTableModel model = new DefaultTableModel(new String[][]{{"Sarah","100"}, {"Abc","50"}, {"def","30"}}, new String[]{"Name","Price","Selection"}){
+            Class[] columnTypes = new Class[] {
+                    Object.class, Object.class, Boolean.class
+            };
+            public Class getColumnClass(int columnIndex) {
+                return columnTypes[columnIndex];
+            }
+        };
+
+        JTable table = new JTable(model);
+        sorter = new TableRowSorter<TableModel>(model);  // <--
+        table.setRowSorter(sorter);
+        table.getColumnModel().getColumn(0).setPreferredWidth(550);
+        table.getColumnModel().getColumn(1).setPreferredWidth(150);
+        table.getColumnModel().getColumn(2).setPreferredWidth(98);
+        table.setRowHeight(25);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);// <--
         JScrollPane sp=new JScrollPane(table);
-        sp.setBounds(0, 20, 369, 80);
-        panel.add(sp);
+        sp.setBounds(100, 100, 800, 130);
+        sp.setBorder(blackline);
 
         JLabel lblNewLabel_2 = new JLabel("Cost");
-        lblNewLabel_2.setBounds(34, 170, 70, 15);
+        lblNewLabel_2.setFont(new Font("Serif", Font.PLAIN, 18));
+        lblNewLabel_2.setBounds(100, 250, 70, 15);
         frame.getContentPane().add(lblNewLabel_2);
 
-        JPanel panel_1 = new JPanel();
-        panel_1.setBounds(34, 180, 369, 92);
-        frame.getContentPane().add(panel_1);
-        panel_1.setLayout(null);
 
-        table_1 = new JTable();
+        JTable table_1 = new JTable();
         table_1.setModel(new DefaultTableModel(
                 new Object[][] {
                         {"nkfd", "jknm", "jbbm", "jhndfm"},
                         {"vhnbhj", "jhbjh", "bjbj", "jbjb"},
                         {"bjjbj", "jbjb", "bhjbb", null},
                         {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null},
                 },
                 new String[] {
                         "Item", "Nos", "Price", "Total"
                 }
         ));
+        table_1.setRowHeight(25);
+        table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        table_1.getColumnModel().getColumn(0).setPreferredWidth(400);
+        table_1.getColumnModel().getColumn(1).setPreferredWidth(148);
+        table_1.getColumnModel().getColumn(2).setPreferredWidth(120);
+        table_1.getColumnModel().getColumn(3).setPreferredWidth(130);
         JScrollPane sp1=new JScrollPane(table_1);
-        sp1.setBounds(0, 20, 369, 92);
-        panel_1.add(sp1);
+        sp1.setBounds(100, 280, 800, 132);
+        sp1.setBorder(blackline);
+        frame.getContentPane().add(sp1);
 
         JLabel lblNewLabel_3 = new JLabel("Grand Total");
-        lblNewLabel_3.setBounds(34, 290, 90, 30);
+        lblNewLabel_3.setFont(new Font("Serif", Font.PLAIN, 18));
+        lblNewLabel_3.setBounds(100, 425, 120, 30);
         frame.getContentPane().add(lblNewLabel_3);
 
-        textField_1 = new JTextField();
-        textField_1.setBounds(140, 290, 114, 30);
-        frame.getContentPane().add(textField_1);
-        textField_1.setColumns(10);
 
         JButton btnNewButton = new JButton("Checkout");
-        btnNewButton.setBounds(34, 340, 110, 30);
+        btnNewButton.setBounds(100, 470, 150, 50);
         frame.getContentPane().add(btnNewButton);
+
+        JTextField textField_1 = new JTextField();
+        textField_1.setBounds(225, 425, 114, 30);
+        frame.getContentPane().add(textField_1);
+        textField_1.setColumns(10);
+        textField_1.setEnabled(false);
+        textField_1.setBorder(blackline);
+
+        frame.getContentPane().add(field);
+        frame.add(field);
+        frame.getContentPane().add(sp);
+
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().setLayout(null);
+        frame.setVisible(true);
+        frame.setSize(1000,600);
+    }
+
+    protected void filter() {
+        sorter.setRowFilter(RowFilter.regexFilter("^(?i)"+field.getText(),0));  // <--
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new Billing();
+            }
+        });
     }
 }
