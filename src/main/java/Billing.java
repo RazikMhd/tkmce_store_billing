@@ -72,7 +72,7 @@ public class Billing {
         table.setRowSorter(sorter);
         table.getColumnModel().getColumn(2).setCellRenderer(new ButtonRenderer());;
 
-        table.getColumnModel().getColumn(2).setCellEditor(new RemoveButtonEditor(new JTextField()));
+        table.getColumnModel().getColumn(2).setCellEditor(new ButtonEditor(new JTextField()));
         table.getColumnModel().getColumn(0).setPreferredWidth(550);
         table.getColumnModel().getColumn(1).setPreferredWidth(150);
         table.getColumnModel().getColumn(2).setPreferredWidth(98);
@@ -180,6 +180,8 @@ public class Billing {
         });
     }
 }
+
+//ADD BUTTON TO THE CART ACTION
 class ButtonRender extends JButton implements TableCellRenderer
 {
 
@@ -263,6 +265,9 @@ class ButtonEditor extends DefaultCellEditor
         super.fireEditingStopped();
     }
 }
+
+
+//REMOVE ITEM FROM THE CART ACTION
 class RemoveButtonRender extends JButton implements TableCellRenderer
 {
 
