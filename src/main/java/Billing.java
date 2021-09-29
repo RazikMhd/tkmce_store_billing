@@ -1,13 +1,10 @@
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -50,19 +47,16 @@ public class Billing {
             public void changedUpdate(DocumentEvent e) {}
         });
         DefaultTableModel model = new DefaultTableModel(new String[][]{{"Sarah","100"}, {"Abc","50"}, {"def","30"}}, new String[]{"Name","Price","Selection"}){
-            boolean[] columnEditables = new boolean[] {
-                    false, false, true
+            Class[] columnTypes = new Class[] {
+                    Object.class, Object.class, Boolean.class
             };
-            public boolean isCellEditable(int row, int column) {
-                return columnEditables[column];
+            public Class getColumnClass(int columnIndex) {
+                return columnTypes[columnIndex];
             }
         };
 
         JTable table = new JTable(model);
         sorter = new TableRowSorter<TableModel>(model);  // <--
-        table.getColumnModel().getColumn(2).setCellRenderer(new ButtonRenderer());;
-
-        table.getColumnModel().getColumn(2).setCellEditor(new ButtonEditor(new JTextField()));
         table.setRowSorter(sorter);
         table.getColumnModel().getColumn(0).setPreferredWidth(550);
         table.getColumnModel().getColumn(1).setPreferredWidth(150);
@@ -80,7 +74,6 @@ public class Billing {
 
 
         JTable table_1 = new JTable();
-
         table_1.setModel(new DefaultTableModel(
                 new Object[][] {
                         {"nkfd", "jknm", "jbbm", "jhndfm"},
@@ -91,18 +84,9 @@ public class Billing {
                 new String[] {
                         "Item", "Nos", "Price", "Total"
                 }
-        ){
-            boolean[] columnEditables = new boolean[] {
-                    false, true, false, false
-            };
-            public boolean isCellEditable(int row, int column) {
-                return columnEditables[column];
-            }
-        });
-
+        ));
         table_1.setRowHeight(25);
         table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
         table_1.getColumnModel().getColumn(0).setPreferredWidth(400);
         table_1.getColumnModel().getColumn(1).setPreferredWidth(148);
         table_1.getColumnModel().getColumn(2).setPreferredWidth(120);
@@ -149,88 +133,5 @@ public class Billing {
                 new Billing();
             }
         });
-    }
-}
-class ButtonRender extends JButton implements TableCellRenderer
-{
-
-    //CONSTRUCTOR
-    public ButtonRender() {
-        //SET BUTTON PROPERTIES
-        setOpaque(true);
-    }
-    @Override
-    public Component getTableCellRendererComponent(JTable table, Object obj,
-                                                   boolean selected, boolean focused, int row, int col) {
-
-        //SET PASSED OBJECT AS BUTTON TEXT
-        setText((obj==null) ? "":obj.toString());
-
-        return this;
-    }
-
-}
-
-//BUTTON EDITOR CLASS
-class ButtonEditor extends DefaultCellEditor
-{
-    protected JButton btn;
-    private String lbl;
-    private Boolean clicked;
-
-    public ButtonEditor(JTextField txt) {
-        super(txt);
-
-        btn=new JButton();
-        btn.setOpaque(true);
-
-        //WHEN BUTTON IS CLICKED
-        btn.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                fireEditingStopped();
-            }
-        });
-    }
-
-    //OVERRIDE A COUPLE OF METHODS
-    @Override
-    public Component getTableCellEditorComponent(JTable table, Object obj,
-                                                 boolean selected, int row, int col) {
-
-        //SET TEXT TO BUTTON,SET CLICKED TO TRUE,THEN RETURN THE BTN OBJECT
-        lbl=(obj==null) ? "":obj.toString();
-        btn.setText(lbl);
-        clicked=true;
-        return btn;
-    }
-
-    @Override
-    public Object getCellEditorValue() {
-
-        if(clicked)
-        {
-            //SHOW US SOME MESSAGE
-            JOptionPane.showMessageDialog(btn, lbl+" selection Clicked");
-        }
-        //SET IT TO FALSE NOW THAT ITS CLICKED
-        clicked=false;
-        return new String(lbl);
-    }
-
-    @Override
-    public boolean stopCellEditing() {
-
-        //SET CLICKED TO FALSE FIRST
-        clicked=false;
-        return super.stopCellEditing();
-    }
-
-    @Override
-    protected void fireEditingStopped() {
-        // TODO Auto-generated method stub
-        super.fireEditingStopped();
     }
 }
