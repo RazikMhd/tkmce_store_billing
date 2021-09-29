@@ -4,6 +4,8 @@ import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -56,18 +58,21 @@ public class Billing {
             public void changedUpdate(DocumentEvent e) {}
         });
 
-        DefaultTableModel model = new DefaultTableModel(new String[][]{}, new String[]{"Name","Price","Selection"}){
-            Class[] columnTypes = new Class[] {
-                    Object.class, Object.class, Boolean.class
+        DefaultTableModel model = new DefaultTableModel(new String[][]{{"Sarah","100"}, {"Abc","50"}, {"def","30"}}, new String[]{"Name","Price","Selection"}){
+            boolean[] columnEditables = new boolean[] {
+                    false, false, true
             };
-            public Class getColumnClass(int columnIndex) {
-                return columnTypes[columnIndex];
+            public boolean isCellEditable(int row, int column) {
+                return columnEditables[column];
             }
         };
 
         table = new JTable(model);
         sorter = new TableRowSorter<TableModel>(model);  // <--
         table.setRowSorter(sorter);
+        table.getColumnModel().getColumn(2).setCellRenderer(new ButtonRenderer());;
+
+        table.getColumnModel().getColumn(2).setCellEditor(new ButtonEditor(new JTextField()));
         table.getColumnModel().getColumn(0).setPreferredWidth(550);
         table.getColumnModel().getColumn(1).setPreferredWidth(150);
         table.getColumnModel().getColumn(2).setPreferredWidth(98);
@@ -92,15 +97,24 @@ public class Billing {
                         {null, null, null, null},
                 },
                 new String[] {
-                        "Item", "Nos", "Price", "Total"
+                        "Item", "Nos", "Price", "Total","Remove"
                 }
-        ));
+        ){
+            boolean[] columnEditables = new boolean[] {
+                    false, true, false, false,true
+            };
+            public boolean isCellEditable(int row, int column) {
+                return columnEditables[column];
+            }
+        });
         table_1.setRowHeight(25);
         table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table_1.getColumnModel().getColumn(0).setPreferredWidth(400);
-        table_1.getColumnModel().getColumn(1).setPreferredWidth(148);
+        table_1.getColumnModel().getColumn(1).setPreferredWidth(100);
         table_1.getColumnModel().getColumn(2).setPreferredWidth(120);
-        table_1.getColumnModel().getColumn(3).setPreferredWidth(130);
+        table_1.getColumnModel().getColumn(3).setPreferredWidth(110);
+        table_1.getColumnModel().getColumn(4).setPreferredWidth(68);
+
         JScrollPane sp1=new JScrollPane(table_1);
         sp1.setBounds(100, 280, 800, 132);
         sp1.setBorder(blackline);
@@ -161,5 +175,88 @@ public class Billing {
                 new Billing();
             }
         });
+    }
+}
+class ButtonRender extends JButton implements TableCellRenderer
+{
+
+    //CONSTRUCTOR
+    public ButtonRender() {
+        //SET BUTTON PROPERTIES
+        setOpaque(true);
+    }
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object obj,
+                                                   boolean selected, boolean focused, int row, int col) {
+
+        //SET PASSED OBJECT AS BUTTON TEXT
+        setText((obj==null) ? "":obj.toString());
+
+        return this;
+    }
+
+}
+
+//BUTTON EDITOR CLASS
+class ButtonEditor extends DefaultCellEditor
+{
+    protected JButton btn;
+    private String lbl;
+    private Boolean clicked;
+
+    public ButtonEditor(JTextField txt) {
+        super(txt);
+
+        btn=new JButton();
+        btn.setOpaque(true);
+
+        //WHEN BUTTON IS CLICKED
+        btn.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                fireEditingStopped();
+            }
+        });
+    }
+
+    //OVERRIDE A COUPLE OF METHODS
+    @Override
+    public Component getTableCellEditorComponent(JTable table, Object obj,
+                                                 boolean selected, int row, int col) {
+
+        //SET TEXT TO BUTTON,SET CLICKED TO TRUE,THEN RETURN THE BTN OBJECT
+        lbl=(obj==null) ? "":obj.toString();
+        btn.setText(lbl);
+        clicked=true;
+        return btn;
+    }
+
+    @Override
+    public Object getCellEditorValue() {
+
+        if(clicked)
+        {
+            //SHOW US SOME MESSAGE
+            JOptionPane.showMessageDialog(btn, lbl+" selection Clicked");
+        }
+        //SET IT TO FALSE NOW THAT ITS CLICKED
+        clicked=false;
+        return new String(lbl);
+    }
+
+    @Override
+    public boolean stopCellEditing() {
+
+        //SET CLICKED TO FALSE FIRST
+        clicked=false;
+        return super.stopCellEditing();
+    }
+
+    @Override
+    protected void fireEditingStopped() {
+        // TODO Auto-generated method stub
+        super.fireEditingStopped();
     }
 }
