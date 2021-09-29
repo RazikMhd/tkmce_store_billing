@@ -70,7 +70,7 @@ public class Billing {
         table = new JTable(model);
         sorter = new TableRowSorter<TableModel>(model);  // <--
         table.setRowSorter(sorter);
-        table.getColumnModel().getColumn(2).setCellRenderer(new ButtonRenderer());;
+        table.getColumnModel().getColumn(2).setCellRenderer(new ButtonRender());
 
         table.getColumnModel().getColumn(2).setCellEditor(new ButtonEditor(new JTextField()));
         table.getColumnModel().getColumn(0).setPreferredWidth(550);
@@ -182,6 +182,7 @@ public class Billing {
 }
 
 //ADD BUTTON TO THE CART ACTION
+
 class ButtonRender extends JButton implements TableCellRenderer
 {
 

@@ -173,11 +173,25 @@ public class Inventory {
                 new String[] {
                         "Name", "Price", "Qty","Update","Delete"
                 }
-        ));
+        ){
+            boolean[] columnEditables = new boolean[] {
+                    false, false, false, true,true
+            };
+            public boolean isCellEditable(int row, int column) {
+                return columnEditables[column];
+            }
+        });
         table_1.setRowHeight(30);
         table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        table_1.getColumnModel().getColumn(0).setPreferredWidth(368);
-        table_1.getColumnModel().getColumn(1).setPreferredWidth(150);
+
+        table_1.getColumnModel().getColumn(3).setCellRenderer(new UpdateButtonRender());;
+        table_1.getColumnModel().getColumn(3).setCellEditor(new UpdateButtonEditor(new JTextField()));
+
+        table_1.getColumnModel().getColumn(4).setCellRenderer(new DeleteButtonRender());;
+        table_1.getColumnModel().getColumn(4).setCellEditor(new DeleteButtonEditor(new JTextField()));
+
+        table_1.getColumnModel().getColumn(0).setPreferredWidth(364);
+        table_1.getColumnModel().getColumn(1).setPreferredWidth(136);
         table_1.getColumnModel().getColumn(2).setPreferredWidth(120);
         table_1.getColumnModel().getColumn(3).setPreferredWidth(80);
         table_1.getColumnModel().getColumn(4).setPreferredWidth(80);
@@ -185,7 +199,7 @@ public class Inventory {
         scrollPane.setBounds(100, 300, 800, 250);
         scrollPane.setBorder(blackline);
         frmInventoryManagement.add(scrollPane);
-        table_1.setEnabled(false);
+        table_1.setEnabled(true);
         loadTableData();
     }
 
@@ -201,8 +215,8 @@ public class Inventory {
         tableadd.setRowCount(0);
         for (Document product : documentList) {
             System.out.println(product.getString("name"));
-            table_1.getColumn("Update").setCellRenderer((TableCellRenderer) new ButtonRenderer());
-            table_1.getColumn("Delete").setCellRenderer((TableCellRenderer) new ButtonRenderer());
+
+
             Object data[]={product.getString("name"),product.getInteger("price").toString(),product.getInteger("quantity").toString(),"✎","✘"};
             tableadd.addRow(data);
         }
@@ -212,13 +226,171 @@ public class Inventory {
 
 
 
-class ButtonRenderer extends JButton implements TableCellRenderer {
-    public ButtonRenderer() {
-        //setOpaque(true);
+//DELETE BUTTON FROM THE CART ACTION
+class DeleteButtonRender extends JButton implements TableCellRenderer
+{
+
+    //CONSTRUCTOR
+    public DeleteButtonRender() {
+        //SET BUTTON PROPERTIES
+        setOpaque(true);
+    }
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object obj,
+                                                   boolean selected, boolean focused, int row, int col) {
+
+        //SET PASSED OBJECT AS BUTTON TEXT
+        setText((obj==null) ? "":obj.toString());
+
+        return this;
     }
 
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        setText((value == null) ? "" : value.toString());
+}
+
+//BUTTON EDITOR CLASS
+class DeleteButtonEditor extends DefaultCellEditor
+{
+    protected JButton btn;
+    private String lbl;
+    private Boolean clicked;
+
+    public DeleteButtonEditor(JTextField txt) {
+        super(txt);
+
+        btn=new JButton();
+        btn.setOpaque(true);
+
+        //WHEN BUTTON IS CLICKED
+        btn.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                fireEditingStopped();
+            }
+        });
+    }
+
+    //OVERRIDE A COUPLE OF METHODS
+    @Override
+    public Component getTableCellEditorComponent(JTable table, Object obj,
+                                                 boolean selected, int row, int col) {
+
+        //SET TEXT TO BUTTON,SET CLICKED TO TRUE,THEN RETURN THE BTN OBJECT
+        lbl=(obj==null) ? "":obj.toString();
+        btn.setText(lbl);
+        clicked=true;
+        return btn;
+    }
+
+    @Override
+    public Object getCellEditorValue() {
+
+        if(clicked)
+        {
+            //SHOW US SOME MESSAGE
+            JOptionPane.showMessageDialog(btn," Remove Clicked");
+        }
+        //SET IT TO FALSE NOW THAT ITS CLICKED
+        clicked=false;
+        return new String(lbl);
+    }
+
+    @Override
+    public boolean stopCellEditing() {
+
+        //SET CLICKED TO FALSE FIRST
+        clicked=false;
+        return super.stopCellEditing();
+    }
+
+    @Override
+    protected void fireEditingStopped() {
+        // TODO Auto-generated method stub
+        super.fireEditingStopped();
+    }
+}
+//DELETE BUTTON FROM THE CART ACTION
+class UpdateButtonRender extends JButton implements TableCellRenderer
+{
+
+    //CONSTRUCTOR
+    public UpdateButtonRender() {
+        //SET BUTTON PROPERTIES
+        setOpaque(true);
+    }
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object obj,
+                                                   boolean selected, boolean focused, int row, int col) {
+
+        //SET PASSED OBJECT AS BUTTON TEXT
+        setText((obj==null) ? "":obj.toString());
+
         return this;
+    }
+
+}
+
+//BUTTON EDITOR CLASS
+class UpdateButtonEditor extends DefaultCellEditor
+{
+    protected JButton btn;
+    private String lbl;
+    private Boolean clicked;
+
+    public UpdateButtonEditor(JTextField txt) {
+        super(txt);
+
+        btn=new JButton();
+        btn.setOpaque(true);
+
+        //WHEN BUTTON IS CLICKED
+        btn.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                fireEditingStopped();
+            }
+        });
+    }
+
+    //OVERRIDE A COUPLE OF METHODS
+    @Override
+    public Component getTableCellEditorComponent(JTable table, Object obj,
+                                                 boolean selected, int row, int col) {
+
+        //SET TEXT TO BUTTON,SET CLICKED TO TRUE,THEN RETURN THE BTN OBJECT
+        lbl=(obj==null) ? "":obj.toString();
+        btn.setText(lbl);
+        clicked=true;
+        return btn;
+    }
+
+    @Override
+    public Object getCellEditorValue() {
+
+        if(clicked)
+        {
+            //SHOW US SOME MESSAGE
+            JOptionPane.showMessageDialog(btn," Update Clicked");
+        }
+        //SET IT TO FALSE NOW THAT ITS CLICKED
+        clicked=false;
+        return new String(lbl);
+    }
+
+    @Override
+    public boolean stopCellEditing() {
+
+        //SET CLICKED TO FALSE FIRST
+        clicked=false;
+        return super.stopCellEditing();
+    }
+
+    @Override
+    protected void fireEditingStopped() {
+        // TODO Auto-generated method stub
+        super.fireEditingStopped();
     }
 }
