@@ -72,7 +72,7 @@ public class Billing {
         table.setRowSorter(sorter);
         table.getColumnModel().getColumn(2).setCellRenderer(new ButtonRenderer());;
 
-        table.getColumnModel().getColumn(2).setCellEditor(new ButtonEditor(new JTextField()));
+        table.getColumnModel().getColumn(2).setCellEditor(new RemoveButtonEditor(new JTextField()));
         table.getColumnModel().getColumn(0).setPreferredWidth(550);
         table.getColumnModel().getColumn(1).setPreferredWidth(150);
         table.getColumnModel().getColumn(2).setPreferredWidth(98);
@@ -109,6 +109,9 @@ public class Billing {
         });
         table_1.setRowHeight(25);
         table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        table_1.getColumnModel().getColumn(4).setCellRenderer(new RemoveButtonRender());;
+
+        table_1.getColumnModel().getColumn(4).setCellEditor(new RemoveButtonEditor(new JTextField()));
         table_1.getColumnModel().getColumn(0).setPreferredWidth(400);
         table_1.getColumnModel().getColumn(1).setPreferredWidth(100);
         table_1.getColumnModel().getColumn(2).setPreferredWidth(120);
@@ -240,6 +243,89 @@ class ButtonEditor extends DefaultCellEditor
         {
             //SHOW US SOME MESSAGE
             JOptionPane.showMessageDialog(btn, lbl+" selection Clicked");
+        }
+        //SET IT TO FALSE NOW THAT ITS CLICKED
+        clicked=false;
+        return new String(lbl);
+    }
+
+    @Override
+    public boolean stopCellEditing() {
+
+        //SET CLICKED TO FALSE FIRST
+        clicked=false;
+        return super.stopCellEditing();
+    }
+
+    @Override
+    protected void fireEditingStopped() {
+        // TODO Auto-generated method stub
+        super.fireEditingStopped();
+    }
+}
+class RemoveButtonRender extends JButton implements TableCellRenderer
+{
+
+    //CONSTRUCTOR
+    public RemoveButtonRender() {
+        //SET BUTTON PROPERTIES
+        setOpaque(true);
+    }
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object obj,
+                                                   boolean selected, boolean focused, int row, int col) {
+
+        //SET PASSED OBJECT AS BUTTON TEXT
+        setText((obj==null) ? "":obj.toString());
+
+        return this;
+    }
+
+}
+
+//BUTTON EDITOR CLASS
+class RemoveButtonEditor extends DefaultCellEditor
+{
+    protected JButton btn;
+    private String lbl;
+    private Boolean clicked;
+
+    public RemoveButtonEditor(JTextField txt) {
+        super(txt);
+
+        btn=new JButton();
+        btn.setOpaque(true);
+
+        //WHEN BUTTON IS CLICKED
+        btn.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                fireEditingStopped();
+            }
+        });
+    }
+
+    //OVERRIDE A COUPLE OF METHODS
+    @Override
+    public Component getTableCellEditorComponent(JTable table, Object obj,
+                                                 boolean selected, int row, int col) {
+
+        //SET TEXT TO BUTTON,SET CLICKED TO TRUE,THEN RETURN THE BTN OBJECT
+        lbl=(obj==null) ? "":obj.toString();
+        btn.setText(lbl);
+        clicked=true;
+        return btn;
+    }
+
+    @Override
+    public Object getCellEditorValue() {
+
+        if(clicked)
+        {
+            //SHOW US SOME MESSAGE
+            JOptionPane.showMessageDialog(btn, lbl+" Remove Clicked");
         }
         //SET IT TO FALSE NOW THAT ITS CLICKED
         clicked=false;
