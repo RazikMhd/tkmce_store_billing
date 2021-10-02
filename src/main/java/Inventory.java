@@ -59,6 +59,8 @@ public class Inventory {
         frmInventoryManagement.setBounds(100, 100, 1000, 600);
         frmInventoryManagement.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frmInventoryManagement.getContentPane().setLayout(null);
+        frmInventoryManagement.getContentPane().setBackground(new Color(255, 236, 179));
+
 
         JLabel lblNewLabel = new JLabel("Inventory Management");
         lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 28));
