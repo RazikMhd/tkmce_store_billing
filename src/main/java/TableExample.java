@@ -50,9 +50,9 @@ public class TableExample {
             public void changedUpdate(DocumentEvent e) {}
         });
 
-        DefaultTableModel model = new DefaultTableModel(new String[][]{{"Sarah"}, {"Abc"}, {"def"}}, new String[]{"Name"}){
+        DefaultTableModel model = new DefaultTableModel(new String[][]{{"Sarah"},{"sahsdbn"},{"sajjhjh"}, {"Abc"}, {"def"}}, new String[]{"Name"}){
             boolean[] columnEditables = new boolean[] {
-                    false, false, true
+                    false
             };
             public boolean isCellEditable(int row, int column) {
                 return columnEditables[column];
@@ -63,11 +63,10 @@ public class TableExample {
         sorter = new TableRowSorter<TableModel>(model);  // <--
         table.setRowSorter(sorter);
 
-        table.getColumnModel().getColumn(0).setPreferredWidth(550);
+        table.getColumnModel().getColumn(0).setPreferredWidth(800);
         table.setRowHeight(25);
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);// <--
         JScrollPane sp=new JScrollPane(table);
-        sp.setBounds(100, 100, 800, 130);
+        sp.setBounds(100, 100, 798, 130);
         sp.setBorder(blackline);
 
 
@@ -99,11 +98,7 @@ public class TableExample {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new TableExample();
-            }
-        });
+        new TableExample();
     }
 }
 
