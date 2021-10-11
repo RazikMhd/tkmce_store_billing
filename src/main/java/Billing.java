@@ -91,10 +91,9 @@ public class Billing {
         JTable table_1 = new JTable();
         table_1.setModel(new DefaultTableModel(
                 new Object[][] {
-                        {"nkfd", "jknm", "jbbm", "jhndfm"},
-                        {"vhnbhj", "jhbjh", "bjbj", "jbjb"},
-                        {"bjjbj", "jbjb", "bhjbb", null},
-                        {null, null, null, null},
+                        {"Sugar", "", "", ""},
+                        {"OIL", "", "", ""},
+
                 },
                 new String[] {
                         "Item", "Nos", "Price", "Total","Remove"
