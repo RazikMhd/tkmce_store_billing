@@ -6,6 +6,7 @@ import org.bson.types.ObjectId;
 
 import java.awt.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import javax.swing.border.Border;
@@ -14,8 +15,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.border.LineBorder;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
 public class Inventory {
@@ -54,47 +58,62 @@ public class Inventory {
      */
     private void initialize() {
         Border blackline = BorderFactory.createLineBorder(Color.black);
+        Color myCustomColor1 = new Color(145, 107, 191);
         frmInventoryManagement = new JFrame();
         frmInventoryManagement.setTitle("Inventory Management");
         frmInventoryManagement.setBounds(100, 100, 1000, 600);
         frmInventoryManagement.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frmInventoryManagement.getContentPane().setLayout(null);
-        frmInventoryManagement.getContentPane().setBackground(new Color(255, 236, 179));
+
+        try{
+            frmInventoryManagement.setContentPane(new JLabel(new ImageIcon(ImageIO.read(new File("src/main/img/bg.png")))));
+
+        }catch(IOException e)
+        {
+            e.printStackTrace();
+
+        }
 
 
-        JLabel lblNewLabel = new JLabel("Inventory Management");
+
+        JLabel lblNewLabel = new JLabel("INVENTORY MANAGEMENT");
+        Color myCustomColor2 = new Color(23, 0, 85);
+        lblNewLabel.setForeground(myCustomColor2);
         lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 28));
-        lblNewLabel.setBounds(300, 20, 400, 40);
+        lblNewLabel.setBounds(290, 20, 420, 40);
         frmInventoryManagement.getContentPane().add(lblNewLabel);
 
-        JLabel lblNewLabel_1 = new JLabel("Add New Product");
-        lblNewLabel_1.setBounds(100, 70, 200, 25);
-        lblNewLabel_1.setFont(new Font("Dialog", Font.BOLD, 20));
-        frmInventoryManagement.getContentPane().add(lblNewLabel_1);
+
 
         JPanel panel = new JPanel();
         panel.setBorder(blackline);
-        panel.setBounds(100, 115, 800, 120);
+        panel.setBounds(650, 80, 320, 460);
         frmInventoryManagement.getContentPane().add(panel);
         panel.setLayout(null);
 
+        JLabel lblNewLabel_1 = new JLabel("Add New Product");
+        lblNewLabel_1.setForeground(myCustomColor1);
+
+        lblNewLabel_1.setBounds(62, 20, 196, 30);
+        lblNewLabel_1.setFont(new Font("Dialog", Font.BOLD, 20));
+        panel.add(lblNewLabel_1);
+
         JLabel lblNewLabel_2 = new JLabel("Name");
-        lblNewLabel_2.setBounds(10, 20, 100, 25);
+        lblNewLabel_2.setBounds(20, 60, 280, 40);
         lblNewLabel_2.setFont(new Font("Serif", Font.PLAIN, 18));
         panel.add(lblNewLabel_2);
 
         name = new JTextField();
-        name.setBounds(100, 20, 200, 25);
+        name.setBounds(20, 110, 280, 40);
         panel.add(name);
         name.setColumns(10);
 
         JLabel lblNewLabel_3 = new JLabel("Price");
         lblNewLabel_3.setFont(new Font("Serif", Font.PLAIN, 18));
-        lblNewLabel_3.setBounds(350, 20, 100, 25);
+        lblNewLabel_3.setBounds(20, 170, 280, 40);
         panel.add(lblNewLabel_3);
 
         price = new JTextField();
-        price.setBounds(420, 20, 114, 25);
+        price.setBounds(20, 220, 280, 40);
         panel.add(price);
         price.setColumns(10);
 
@@ -111,11 +130,11 @@ public class Inventory {
 
         JLabel lblNewLabel_4 = new JLabel("Quantity");
         lblNewLabel_4.setFont(new Font("Serif", Font.PLAIN, 17));
-        lblNewLabel_4.setBounds(10, 70, 100, 25);
+        lblNewLabel_4.setBounds(20, 280, 280, 40);
         panel.add(lblNewLabel_4);
 
         qty = new JTextField();
-        qty.setBounds(100, 70, 114, 25);
+        qty.setBounds(20, 330, 280, 40);
         panel.add(qty);
         qty.setColumns(10);
         qty.addKeyListener(new KeyAdapter() {
@@ -128,7 +147,10 @@ public class Inventory {
             }
         });
 
-        JButton addbtn = new JButton("Add New Product");
+
+
+
+        JButton addbtn = new JButton("Add");
         addbtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if(name.getText().equals("")||price.getText().equals("")||qty.getText().equals("")) {
@@ -157,24 +179,35 @@ public class Inventory {
                 }
             }
         });
-        addbtn.setBounds(355, 70, 150, 35);
+        addbtn.setBackground(Color.BLUE);
+        addbtn.setForeground(Color.WHITE);
+        addbtn.setBounds(150, 390, 150, 35);
         panel.add(addbtn);
 
-        JLabel lblNewLabel_5 = new JLabel("Product List");
-        lblNewLabel_5.setFont(new Font("Dialog", Font.BOLD, 20));
-        lblNewLabel_5.setBounds(100, 250, 200, 25);
-        frmInventoryManagement.getContentPane().add(lblNewLabel_5);
 
+        //panel for list all products
+        JPanel panel2=new JPanel();
+        panel2.setBounds(30,80,600,460);
+        panel2.setLayout(null);
+        panel2.setBorder(blackline);
+        frmInventoryManagement.add(panel2);
+
+        JLabel lblNewLabel_5 = new JLabel("Product List");
+        lblNewLabel_5.setForeground(myCustomColor1);
+        lblNewLabel_5.setFont(new Font("Dialog", Font.BOLD, 20));
+        lblNewLabel_5.setBounds(226, 15, 138, 25);
+        panel2.add(lblNewLabel_5);
 
         table_1 = new JTable();
         table_1.setBorder(new LineBorder(new Color(0, 0, 0)));
         table_1.setColumnSelectionAllowed(true);
+        String heading[]=new String[] {"Name", "Price", "Qty","Update","Delete"
+        };
+
         table_1.setModel(new DefaultTableModel(
                 new Object[][] {
                 },
-                new String[] {
-                        "Name", "Price", "Qty","Update","Delete"
-                }
+heading
         ){
             boolean[] columnEditables = new boolean[] {
                     false, false, false, true,true
@@ -192,15 +225,22 @@ public class Inventory {
         table_1.getColumnModel().getColumn(4).setCellRenderer(new DeleteButtonRender());;
         table_1.getColumnModel().getColumn(4).setCellEditor(new DeleteButtonEditor(new JTextField()));
 
-        table_1.getColumnModel().getColumn(0).setPreferredWidth(364);
-        table_1.getColumnModel().getColumn(1).setPreferredWidth(136);
-        table_1.getColumnModel().getColumn(2).setPreferredWidth(120);
-        table_1.getColumnModel().getColumn(3).setPreferredWidth(80);
-        table_1.getColumnModel().getColumn(4).setPreferredWidth(80);
+        table_1.getColumnModel().getColumn(0).setPreferredWidth(250);
+        table_1.getColumnModel().getColumn(1).setPreferredWidth(110);
+        table_1.getColumnModel().getColumn(2).setPreferredWidth(100);
+        table_1.getColumnModel().getColumn(3).setPreferredWidth(60);
+        table_1.getColumnModel().getColumn(4).setPreferredWidth(54);
+        JTableHeader th=table_1.getTableHeader();
+        Color myCustomColor3 = new Color(32, 136, 203);
+        th.setBackground(myCustomColor3);
+        th.setForeground(Color.white);
+        Font headerFont = new Font("Verdana", Font.BOLD, 14);
+        th.setFont(headerFont);
+
+
         JScrollPane scrollPane = new JScrollPane(table_1);
-        scrollPane.setBounds(100, 300, 800, 250);
-        scrollPane.setBorder(blackline);
-        frmInventoryManagement.add(scrollPane);
+        scrollPane.setBounds(10, 50, 580, 380);
+        panel2.add(scrollPane);
         table_1.setEnabled(true);
         loadTableData();
     }
