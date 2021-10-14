@@ -76,7 +76,7 @@ public class Inventory {
 
 
         JLabel lblNewLabel = new JLabel("INVENTORY MANAGEMENT");
-        Color myCustomColor2 = new Color(23, 0, 85);
+        Color myCustomColor2 = new Color(251, 116, 62);
         lblNewLabel.setForeground(myCustomColor2);
         lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 28));
         lblNewLabel.setBounds(290, 20, 420, 40);
@@ -192,10 +192,10 @@ public class Inventory {
         panel2.setBorder(blackline);
         frmInventoryManagement.add(panel2);
 
-        JLabel lblNewLabel_5 = new JLabel("Product List");
+        JLabel lblNewLabel_5 = new JLabel("PRODUCT DETAILS");
         lblNewLabel_5.setForeground(myCustomColor1);
         lblNewLabel_5.setFont(new Font("Dialog", Font.BOLD, 20));
-        lblNewLabel_5.setBounds(226, 15, 138, 25);
+        lblNewLabel_5.setBounds(188, 15, 224, 25);
         panel2.add(lblNewLabel_5);
 
         table_1 = new JTable();
@@ -219,23 +219,32 @@ heading
         table_1.setRowHeight(30);
         table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-        table_1.getColumnModel().getColumn(3).setCellRenderer(new UpdateButtonRender());;
+
+
+        table_1.getColumnModel().getColumn(3).setCellRenderer(new UpdateButtonRender());
         table_1.getColumnModel().getColumn(3).setCellEditor(new UpdateButtonEditor(new JTextField()));
+        table_1.getColumnModel().setColumnMargin(5);
 
         table_1.getColumnModel().getColumn(4).setCellRenderer(new DeleteButtonRender());;
         table_1.getColumnModel().getColumn(4).setCellEditor(new DeleteButtonEditor(new JTextField()));
 
         table_1.getColumnModel().getColumn(0).setPreferredWidth(250);
+
         table_1.getColumnModel().getColumn(1).setPreferredWidth(110);
         table_1.getColumnModel().getColumn(2).setPreferredWidth(100);
         table_1.getColumnModel().getColumn(3).setPreferredWidth(60);
         table_1.getColumnModel().getColumn(4).setPreferredWidth(54);
+
+
+        table_1.setFont(new Font("Serif", 1, 15));
+
         JTableHeader th=table_1.getTableHeader();
         Color myCustomColor3 = new Color(32, 136, 203);
         th.setBackground(myCustomColor3);
         th.setForeground(Color.white);
         Font headerFont = new Font("Verdana", Font.BOLD, 14);
         th.setFont(headerFont);
+
 
 
         JScrollPane scrollPane = new JScrollPane(table_1);
@@ -256,7 +265,7 @@ heading
         DefaultTableModel tableadd=(DefaultTableModel)table_1.getModel();
         tableadd.setRowCount(0);
         for (Document product : documentList) {
-            System.out.println(product.getString("name"));
+            System.out.println(product);
 
 
             Object data[]={product.getString("name"),product.getInteger("price").toString(),product.getInteger("quantity").toString(),"✎","✘"};
