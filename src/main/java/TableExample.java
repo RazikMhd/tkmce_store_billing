@@ -69,8 +69,6 @@ public class TableExample {
         sp.setBounds(100, 100, 798, 130);
         sp.setBorder(blackline);
 
-
-
         frame.getContentPane().add(field);
         frame.getContentPane().add(field);
         frame.getContentPane().add(sp);
@@ -79,7 +77,6 @@ public class TableExample {
         frame.getContentPane().setLayout(null);
         frame.setVisible(true);
         frame.setSize(1000,600);
-
 
         table.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
@@ -90,8 +87,6 @@ public class TableExample {
         });
 
     }
-
-
 
     protected void filter() {
         sorter.setRowFilter(RowFilter.regexFilter("^(?i)"+field.getText(),0));  // <--
