@@ -155,7 +155,7 @@ public class BillingInterface {
 			}
 		});
 
-		// Redirecting from Billing page to Inventory on button Click
+		// Redirecting from Billing page to checkout on button Click
 		checkOut.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
