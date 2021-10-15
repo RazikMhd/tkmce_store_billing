@@ -3,6 +3,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -132,6 +133,16 @@ public class BillingInterface {
         f.setLayout(null);
         f.setSize(1000,600);
         f.setVisible(true);
+
+//Redirecting from Billing  page to Inventory on button Click
+        manageInventory.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Inventory secod=new Inventory();
+                f.setVisible(false);
+                secod.frmInventoryManagement.setVisible(true);
+            }
+        });
 
 
         b.addActionListener(new ActionListener() {

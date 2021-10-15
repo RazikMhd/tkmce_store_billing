@@ -24,7 +24,7 @@ import javax.swing.table.TableCellRenderer;
 
 public class Inventory {
 
-    private JFrame frmInventoryManagement;
+    public JFrame frmInventoryManagement;
     private JTextField name;
     private JTextField price;
     private JTextField qty;
@@ -56,7 +56,7 @@ public class Inventory {
     /**
      * Initialize the contents of the frame.
      */
-    private void initialize() {
+    public void initialize() {
         Border blackline = BorderFactory.createLineBorder(Color.black);
         Color myCustomColor1 = new Color(145, 107, 191);
         frmInventoryManagement = new JFrame();
@@ -251,6 +251,7 @@ heading
         scrollPane.setBounds(10, 50, 580, 380);
         panel2.add(scrollPane);
         table_1.setEnabled(true);
+        frmInventoryManagement.setVisible(true);
         loadTableData();
     }
 
