@@ -2,11 +2,17 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class BillingInterface {
     JFrame f;
@@ -14,22 +20,52 @@ public class BillingInterface {
     ArrayList<Document> documentList;
     JTextField cartQty;
     JTable jTable;
-    JLabel grandTotal;
+    JLabel grandTotal,labelQty;
     JButton checkOut,manageInventory;
+    Border blackline = BorderFactory.createLineBorder(Color.black);
 
     public BillingInterface(){
         f=new JFrame("ComboBox Example");
+        try{
+            f.setContentPane(new JLabel(new ImageIcon(ImageIO.read(new File("src/main/img/billingbg.jpg")))));
+
+        }catch(IOException e)
+        {
+            e.printStackTrace();
+
+        }
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        JLabel lblNewLabel = new JLabel("BILLING");
+        Color myCustomColor2 = new Color(82, 5, 123);
+        lblNewLabel.setForeground(myCustomColor2);
+        lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 28));
+        lblNewLabel.setBounds(470, 20, 120, 40);
+        f.getContentPane().add(lblNewLabel);
+
         JButton b=new JButton("Add to Cart");
-        b.setBounds(600,100,150,20);
+        b.setBounds(750,100,180,30);
+        Color myCustomColor6 = new Color(97, 0, 148);
+        b.setBackground(myCustomColor6);
+        b.setForeground(Color.white);
+
 
         checkOut = new JButton("Check Out");
-        checkOut.setBounds(30,500,150,20);
+        checkOut.setBounds(60,480,150,30);
+        Color myCustomColor5 = new Color(54, 139, 133);
+        checkOut.setBackground(myCustomColor5);
+        checkOut.setForeground(Color.white);
 
         manageInventory = new JButton("Manage Inventory");
-        manageInventory.setBounds(30,450,150,20);
+        manageInventory.setBounds(60,420,150,30);
+        manageInventory.setBackground(Color.yellow);
+        Color myCustomColor3 = new Color(70, 70, 96);
+        manageInventory.setBackground(myCustomColor3);
+        manageInventory.setForeground(Color.white);
 
         grandTotal = new JLabel("Grand Total : ");
-        grandTotal.setBounds(600,500,400,50);
+        grandTotal.setBounds(700,480,400,50);
+        grandTotal.setFont(new Font("Dialog", Font.BOLD, 20));
 
         MongoClient mongo = new MongoClient( "localhost" , 27017 );
         MongoDatabase database = mongo.getDatabase("tkm_store");
@@ -41,10 +77,20 @@ public class BillingInterface {
         for(int i=0;i<documentList.size();i++){products[i]=documentList.get(i).getString("name");}
 
         cartQty=new JTextField("1");
-        cartQty.setBounds(450,100, 50,20);
+        cartQty.setBounds(520,100, 50,30);
+
+        labelQty= new JLabel("Qty");
+
+        labelQty.setBounds(470,100,50,30);
+        Color myCustomColor8 = new Color(2, 44, 67);
+        labelQty.setForeground(myCustomColor8);
+        labelQty.setFont(new Font("Dialog", Font.BOLD, 18));
 
         JComboBox cb=new JComboBox(products);
-        cb.setBounds(50, 100,350,20);
+        Color myCustomColor7 = new Color(127, 200, 169);
+        cb.setBackground(myCustomColor7);
+        cb.setForeground(Color.BLUE);
+        cb.setBounds(60, 100,350,30);
 
 
         String heading[]=new String[] {"Name", "Price", "Quantity","Total"};
@@ -52,22 +98,39 @@ public class BillingInterface {
         jTable =new JTable();
 
         jTable.setModel((new DefaultTableModel(new Object[][] {}, heading)));
+        jTable.setFont(new Font("Serif", 1, 15));
+        jTable.getColumnModel().setColumnMargin(5);
+        jTable.setRowHeight(30);
 
-        jTable.setBounds(30,100,200,300);
+        jTable.getColumnModel().getColumn(0).setPreferredWidth(410);
+        jTable.getColumnModel().getColumn(1).setPreferredWidth(140);
+        jTable.getColumnModel().getColumn(2).setPreferredWidth(140);
+        jTable.getColumnModel().getColumn(3).setPreferredWidth(180);
+
+        JTableHeader th=jTable.getTableHeader();
+        Color myCustomColor4 = new Color(156, 61, 84);
+        th.setBackground(myCustomColor4);
+        th.setForeground(Color.white);
+        Font headerFont = new Font("Verdana", Font.BOLD, 14);
+        th.setFont(headerFont);
+
         JScrollPane sp=new JScrollPane(jTable);
 
-        sp.setBounds(30, 280, 800, 132);
+        sp.setBounds(60, 210, 870, 150);
+        sp.setBorder(blackline);
+
         f.getContentPane().add(sp);
 
 
         f.add(cb);
         f.add(b);
         f.add(cartQty);
+        f.add(labelQty);
         f.add(grandTotal);
         f.add(checkOut);
         f.add(manageInventory);
         f.setLayout(null);
-        f.setSize(1000,700);
+        f.setSize(1000,600);
         f.setVisible(true);
 
 
@@ -108,6 +171,8 @@ public class BillingInterface {
             }
         });
 
+
+
     }
 
     public static void main(String[] args)
@@ -136,7 +201,6 @@ public class BillingInterface {
         }
         grandTotal.setText("Grand Total : "+total);
     }
-
 
 
 }
