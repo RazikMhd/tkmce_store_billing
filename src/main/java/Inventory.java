@@ -1,10 +1,7 @@
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,6 +36,7 @@ public class Inventory {
 	private JTextField price;
 	private JTextField qty;
 	private JTable table_1;
+	public ArrayList<Document> documentList = new ArrayList<>();
 
 	/**
 	 * Launch the application.
@@ -250,6 +248,26 @@ public class Inventory {
 				third.f.setVisible(true);
 			}
 		});
+
+		table_1.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				int row = table_1.getSelectedRow();
+
+				try {
+					MongoClient mongo = new MongoClient("localhost", 27017);
+					MongoDatabase database = mongo.getDatabase("tkm_store");
+					MongoCollection<Document> collection = database.getCollection("inventory");
+					collection.deleteOne(documentList.get(row));
+
+				}catch (Exception exception)
+				{
+					exception.printStackTrace();
+				}
+
+				loadTableData();
+			}
+		});
+
 	}
 
 	// populates data from DB to table
@@ -257,13 +275,11 @@ public class Inventory {
 		MongoClient mongo = new MongoClient("localhost", 27017);
 		MongoDatabase database = mongo.getDatabase("tkm_store");
 		MongoCollection<Document> collection = database.getCollection("inventory");
-		ArrayList<Document> documentList = collection.find().into(new ArrayList<>());
+		documentList = collection.find().into(new ArrayList<>());
 
 		DefaultTableModel tableadd = (DefaultTableModel) table_1.getModel();
 		tableadd.setRowCount(0);
 		for (Document product : documentList) {
-			System.out.println(product);
-
 			Object data[] = { product.getString("name"), product.getInteger("price").toString(),
 					product.getInteger("quantity").toString(), "✎", "✘" };
 			tableadd.addRow(data);
