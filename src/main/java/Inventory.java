@@ -1,7 +1,12 @@
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -221,7 +226,7 @@ public class Inventory {
 
 		table_1.getColumnModel().getColumn(1).setPreferredWidth(110);
 		table_1.getColumnModel().getColumn(2).setPreferredWidth(100);
-		table_1.getColumnModel().getColumn(3).setPreferredWidth(70);
+		table_1.getColumnModel().getColumn(3).setPreferredWidth(65);
 
 		table_1.setFont(new Font("Serif", 1, 15));
 
@@ -259,8 +264,7 @@ public class Inventory {
 					MongoCollection<Document> collection = database.getCollection("inventory");
 					collection.deleteOne(documentList.get(row));
 
-				}catch (Exception exception)
-				{
+				} catch (Exception exception) {
 					exception.printStackTrace();
 				}
 
@@ -281,7 +285,7 @@ public class Inventory {
 		tableadd.setRowCount(0);
 		for (Document product : documentList) {
 			Object data[] = { product.getString("name"), product.getInteger("price").toString(),
-					product.getInteger("quantity").toString(), "✎", "✘" };
+					product.getInteger("quantity").toString(), "      ✘" };
 			tableadd.addRow(data);
 		}
 	}

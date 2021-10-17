@@ -63,9 +63,9 @@ public class BillingInterface {
 		b.setForeground(Color.white);
 
 		checkOut = new JButton("Check Out");
-		checkOut.setBounds(60, 480, 150, 30);
-		Color myCustomColor5 = new Color(54, 139, 133);
-		checkOut.setBackground(myCustomColor5);
+		Color myCustomColor9 = new Color(149, 1, 1);
+		checkOut.setBounds(770, 480, 150, 40);
+		checkOut.setBackground(myCustomColor9);
 		checkOut.setForeground(Color.white);
 
 		manageInventory = new JButton("Manage Inventory");
@@ -76,8 +76,10 @@ public class BillingInterface {
 		manageInventory.setForeground(Color.white);
 
 		grandTotal = new JLabel("Grand Total : ");
-		grandTotal.setBounds(700, 480, 400, 50);
+
+		grandTotal.setBounds(740, 420, 400, 50);
 		grandTotal.setFont(new Font("Dialog", Font.BOLD, 20));
+		grandTotal.setForeground(Color.black);
 
 		MongoClient mongo = new MongoClient("localhost", 27017);
 		MongoDatabase database = mongo.getDatabase("tkm_store");
@@ -159,9 +161,7 @@ public class BillingInterface {
 		checkOut.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				CheckoutPage ft = new CheckoutPage();
 				f.setVisible(false);
-				ft.frame.setVisible(true);
 			}
 		});
 
